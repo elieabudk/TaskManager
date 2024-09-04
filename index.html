@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Tareas</title>
+    <title>Lista de Tareas</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<form>
-    <input type="text" id="taskInput" placeholder="Ingrese una tarea" required>
-    <button type="button" id="Agregar">Agregar Tarea</button>
-    <button type="button" id="Resetear">Resetear Tareas</button>
-</form>
-<ul id="Tareas" style="list-style-type: none;">
-    
-</ul>
-<script src="script.js"></script>
+    <div class="container">
+        <h1>Lista de Tareas</h1>
+        <input type="text" id="taskInput" placeholder="Nueva tarea...">
+        <button id="Agregar">Agregar</button>
+        <ul id="Tareas"></ul>
+        <button id="Resetear">Resetear</button>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
