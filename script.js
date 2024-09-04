@@ -10,27 +10,21 @@ function cargarTareas() {
                 const parrafo = document.createElement("p");
                 parrafo.innerHTML = elemento.texto;
                 parrafo.style.textDecoration = elemento.completada ? "line-through" : "none";
-
+                
                 const check = document.createElement("input");
                 check.type = "checkbox";
-                check.style.marginLeft = "40px";
                 check.checked = elemento.completada;
 
                 const boton = document.createElement("button");
                 boton.textContent = "borrar";
-                boton.style.marginLeft = "40px";
                 boton.classList.add("borrar");
 
                 const label = document.createElement("label");
                 label.textContent = elemento.completada ? "Completado" : "Pendiente";
-                label.style.marginLeft = '50px';
                 label.style.background = elemento.completada ? "green" : "red";
 
                 const nuevoElemento = document.createElement("li");
-                nuevoElemento.style.display = "flex";
-                nuevoElemento.style.alignItems = "center";
-                check.style.marginRight = "100px";
-                label.style.marginLeft = "auto";
+                nuevoElemento.classList.add("tarea"); // Asegúrate de agregar esta clase
 
                 check.addEventListener("input", function() {
                     elemento.completada = this.checked;
@@ -73,23 +67,17 @@ document.getElementById("Agregar").addEventListener("click", function() {
 
         const check = document.createElement("input");
         check.type = "checkbox";
-        check.style.marginLeft = "40px";
 
         const boton = document.createElement("button");
         boton.textContent = "borrar";
-        boton.style.marginLeft = "40px";
         boton.classList.add("borrar");
 
         const label = document.createElement("label");
         label.textContent = "Pendiente";
-        label.style.marginLeft = '50px';
         label.style.background = "red";
 
         const nuevoElemento = document.createElement("li");
-        nuevoElemento.style.display = "flex";
-        nuevoElemento.style.alignItems = "center";
-        check.style.marginRight = "100px";
-        label.style.marginLeft = "auto";
+        nuevoElemento.classList.add("tarea"); // Asegúrate de agregar esta clase
 
         nuevoElemento.appendChild(check);
         nuevoElemento.appendChild(parrafo);
