@@ -6,9 +6,6 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-
-
-
 // creamos la funcion para registrar un usuario
 
 // Ruta de registro
@@ -40,7 +37,7 @@ exports.Registro = async (req, res) => {
 // funcion para logear un usuario
 
 // Ruta de inicio de sesión
-exports.login = ('/login', async (req, res) => {
+exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     // Buscar usuario en la base de datos
@@ -64,10 +61,11 @@ exports.login = ('/login', async (req, res) => {
     res.cookie('token', token, {
         httpOnly: true,
         secure: true, // Usa true en producción con HTTPS
-        maxAge: 3600000, // 1 hora
+        maxAge: 36000000, // 1 hora
         sameSite: 'none',
         path: '/',
+        domain: 'localhost',
     });
 
     res.json({ message: 'Inicio de sesión exitoso.' });
-});
+};

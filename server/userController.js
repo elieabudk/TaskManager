@@ -1,12 +1,19 @@
 // Importamos mongoose y el model_data
 
-
+const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const model_data = require('./model_data');
 
+
 exports.Crear_Tarea = async (req, res) => {
-    const body = req.body;
-    const respuesta = await model_data.create(body);//
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const email = decoded.email;
+    
+    // Añadir el email al cuerpo de la solicitud
+    const body = { ...req.body, email };
+    const respuesta = await model_data.create(body);
+    
     res.send(respuesta);
     console.log(body);
 };

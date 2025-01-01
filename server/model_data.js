@@ -3,10 +3,11 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 
 const dataSchema = new mongoose.Schema({
-    // id del usuario
-    userId: {
+    // email del usuario
+    email: {
         type: String,
         required: true
+        
     },
     
     // tarea

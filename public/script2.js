@@ -2,7 +2,7 @@ console.log("Hola Mundo");
 
 function cargarTareas() {
     try {
-        const arrString = localStorage.getItem("tareas");
+        const arrString = fetch('http://localhost:3000/api/cargar_tareas');
         if (arrString) {
             const arr = JSON.parse(arrString);
             const tabla = document.getElementById("Tareas");
