@@ -1,10 +1,18 @@
 console.log("Hola Mundo");
 
-function cargarTareas() {
+async function  cargarTareas () {
     try {
-        const arrString = fetch('http://localhost:3000/api/cargar_tareas');
-        if (arrString) {
-            const arr = JSON.parse(arrString);
+        const response = await fetch('http://localhost:3000/api/cargar_tareas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+           
+        });
+       
+        const arr = await response.json(); // Cambiar a response.json()
+        if (arr) {
             const tabla = document.getElementById("Tareas");
             tabla.innerHTML = ''; // Limpiar la tabla antes de agregar tareas
 
@@ -21,7 +29,7 @@ function cargarTareas() {
                 // Celda para el texto de la tarea
                 const celdaTexto = document.createElement("td");
                 const parrafo = document.createElement("p");
-                parrafo.textContent = elemento.texto;
+                parrafo.textContent = elemento.task;
                 parrafo.style.textDecoration = elemento.completada ? "line-through" : "none";
                 celdaTexto.appendChild(parrafo);
 
@@ -37,6 +45,7 @@ function cargarTareas() {
                 const boton = document.createElement("button");
                 boton.textContent = "Borrar";
                 boton.className = "borrar btn btn-danger btn-sm";
+                boton.id = elemento._id;
                 celdaBoton.appendChild(boton);
 
                 // fecha de creacion
@@ -157,19 +166,29 @@ document.getElementById("Agregar").addEventListener("click", function() {
     }
 });
 // evento de click en la tabla para borrar una tarea
-document.getElementById("Tareas").addEventListener('click', function(event) {
+document.getElementById("Tareas").addEventListener('click', async function(event) {
     if (event.target.classList.contains('borrar')) {
         const taskRow = event.target.closest('tr');
         const taskText = taskRow.querySelector('p').textContent.trim();
 
-        let tareas = JSON.parse(localStorage.getItem('tareas')) || [];
-        const index = tareas.findIndex(t => t.texto === taskText);
+        const id = taskRow.querySelector('button').id;
 
-        if (index !== -1) {
-            tareas.splice(index, 1);
-            guardarTareas(tareas);
-            taskRow.remove();
-        }
+        let response = await fetch(`http://localhost:3000/api/borrar_tarea/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        const arr = await response.json(); // Cambiar a response.json()
+        cargarTareas();
+        //const index = arr.findIndex(t => t.task === taskText);
+
+       // if (index !== -1) {
+            //tareas.splice(index, 1);
+            //guardarTareas(tareas);
+            //taskRow.remove();
+       // }
     }
 });
 

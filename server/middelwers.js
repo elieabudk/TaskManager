@@ -6,7 +6,7 @@ const dotenv = require('dotenv');
 
 exports.isAuthenticated = (req, res, next) => {
    const token =req.cookies.token;
-   console.log(token);
+   
    if (!token) {
     return res.status(401).send("No tienes una sesión activa");
     
@@ -16,3 +16,7 @@ exports.isAuthenticated = (req, res, next) => {
    
    next();
 }
+
+
+
+
