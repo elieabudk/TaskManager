@@ -23,7 +23,7 @@ async function  cargarTareas () {
                 const celdaCheck = document.createElement("td");
                 const check = document.createElement("input");
                 check.type = "checkbox";
-                check.checked = elemento.completada;
+                check.checked = elemento.status === "true";
                 celdaCheck.appendChild(check);
 
                 // Celda para el texto de la tarea
@@ -36,8 +36,8 @@ async function  cargarTareas () {
                 // Celda para la etiqueta de estado
                 const celdaEstado = document.createElement("td");
                 const label = document.createElement("span");
-                label.textContent = elemento.completada ? "Completado" : "Pendiente";
-                label.className = elemento.completada ? "badge bg-success" : "badge bg-danger";
+                label.textContent = elemento.status ? "Pendiente2" : "Completado";
+                label.className = elemento.status ?  "badge bg-danger": "badge bg-success";
                 celdaEstado.appendChild(label);
 
                 // Celda para el botón de borrar
@@ -65,15 +65,32 @@ async function  cargarTareas () {
                 tabla.appendChild(nuevaFila);
 
 
-                check.addEventListener("input", function() {
+                check.addEventListener("input", async function() {
+
+                    
                     elemento.completada = this.checked;
-                    label.textContent = this.checked ? "Completado" : "Pendiente";
+                    label.textContent = this.checked ? "Completado3" : "Pendiente3";
                     label.className = this.checked ? "badge bg-success" : "badge bg-danger";
                     parrafo.style.textDecoration = this.checked ? "line-through" : "none";
                     fecha.textContent = this.checked ? new Date().toLocaleString() : new Date().toLocaleString();
 
-                    // Guardar cambios en localStorage
-                    guardarTareas(arr);
+                    const id = boton.id;
+                    try {
+                        const response = await fetch(`http://localhost:3000/api/NuevoDato/${id}`, {
+                            method: 'PUT',
+                            headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ status: this.checked }),
+                        credentials: 'include'
+                    });
+                    const arr = await response.json();
+                    
+                    } catch (error) {
+                        console.error("Error al cambiar estado:", error);
+                    }
+
+                  
                 });
             });
         }
@@ -82,91 +99,27 @@ async function  cargarTareas () {
     }
 }
 
-function guardarTareas(tareas) {
-    try {
-        localStorage.setItem("tareas", JSON.stringify(tareas));
-    } catch (error) {
-        console.error("Error al guardar tareas en localStorage:", error);
-    }
-}
 
-document.getElementById("Agregar").addEventListener("click", function() {
+document.getElementById("Agregar").addEventListener("click", async function() {
     let tareaTexto = document.getElementById("taskInput").value;
-
+    try {
+        const response = await fetch('http://localhost:3000/api/agregar_tarea', {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ task: tareaTexto }),
+        credentials: 'include'
+    });
+    const arr = await response.json();
     
-    if (tareaTexto) {
-        const tabla = document.getElementById("Tareas");
-
-        // Crear una nueva fila
-        const nuevaFila = document.createElement("tr");
-
-        // Celda para el checkbox
-        const celdaCheck = document.createElement("td");
-        const check = document.createElement("input");
-        check.type = "checkbox";
-        //check.setAttribute("checked", "checked");
-        celdaCheck.appendChild(check);
-
-        // Celda para el texto de la tarea
-        const celdaTexto = document.createElement("td");
-        const parrafo = document.createElement("p");
-        parrafo.textContent = tareaTexto;
-        celdaTexto.appendChild(parrafo);
-
-        // Celda para la etiqueta de estado
-        const celdaEstado = document.createElement("td");
-        const label = document.createElement("span");
-        label.textContent = "Pendiente";
-        label.className = "badge bg-danger";
-        celdaEstado.appendChild(label);
-
-        // Celda para el botón de borrar
-        const celdaBoton = document.createElement("td");
-        const boton = document.createElement("button");
-        boton.textContent = "Borrar";
-        boton.className = "borrar btn btn-danger btn-sm";
-        celdaBoton.appendChild(boton);
-
-        // fecha de creacion
-        const celdaFecha = document.createElement("td");
-        const fecha = document.createElement("span");
-        fecha.textContent = new Date().toLocaleString();
-        celdaFecha.appendChild(fecha);
-        
-
-        // Agregar todas las celdas a la fila
-        nuevaFila.appendChild(celdaCheck);
-        nuevaFila.appendChild(celdaTexto);
-        nuevaFila.appendChild(celdaEstado);
-        nuevaFila.appendChild(celdaBoton);
-        nuevaFila.appendChild(celdaFecha);
-
-
-        // Agregar la fila a la tabla
-        tabla.appendChild(nuevaFila);
-
-        let tareasGuardadas = JSON.parse(localStorage.getItem("tareas")) || [];
-        tareasGuardadas.push({ texto: tareaTexto, completada: false, createdAt: new Date().toLocaleString() });
-        guardarTareas(tareasGuardadas);
-
-        check.addEventListener("input", function() {
-            let tareas = JSON.parse(localStorage.getItem("tareas")) || [];
-            const index = tareas.findIndex(t => t.texto === tareaTexto);
-            if (index !== -1) {
-                tareas[index].completada = this.checked;
-                label.textContent = this.checked ? "Completado" : "Pendiente";
-                label.className = this.checked ? "badge bg-success" : "badge bg-danger";
-                parrafo.style.textDecoration = this.checked ? "line-through" : "none";
-                fecha.textContent = this.checked ? new Date().toLocaleString() : new Date().toLocaleString();
-                guardarTareas(tareas);
-            }
-        });
-
-        //document.getElementById("taskInput").value = "";
-    } else {
-        alert("Debe llenar el campo");
+     cargarTareas();
+    } catch (error) {
+        console.error("Error al agregar tarea:", error);
     }
+    
 });
+
 // evento de click en la tabla para borrar una tarea
 document.getElementById("Tareas").addEventListener('click', async function(event) {
     if (event.target.classList.contains('borrar')) {

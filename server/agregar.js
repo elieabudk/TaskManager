@@ -15,12 +15,12 @@ exports.agregar_tarea = async (req, res) => {
     const email = decoded.email;
     try {
         // Tomar la tarea y el email que se envían desde el cliente
-        const task  = req.body;
+        const tarea = req.body;
     
         // Agregar la tarea a la base de datos
         const nuevaTarea = await model_data.create({
             email: email,
-            task: task,
+            task: tarea.task
            
         });
 
