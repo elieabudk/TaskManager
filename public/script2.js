@@ -92,6 +92,8 @@ function guardarTareas(tareas) {
 
 document.getElementById("Agregar").addEventListener("click", function() {
     let tareaTexto = document.getElementById("taskInput").value;
+
+    
     if (tareaTexto) {
         const tabla = document.getElementById("Tareas");
 

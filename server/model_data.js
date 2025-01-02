@@ -18,7 +18,8 @@ const dataSchema = new mongoose.Schema({
     // estado de la tarea
     status: {
         type: String,
-        required: true
+        required: true,
+        default: "pendiente"
     },
     // fecha de creacion
     createdAt: {
