@@ -30,14 +30,14 @@ async function  cargarTareas () {
                 const celdaTexto = document.createElement("td");
                 const parrafo = document.createElement("p");
                 parrafo.textContent = elemento.task;
-                parrafo.style.textDecoration = elemento.completada ? "line-through" : "none";
+                parrafo.style.textDecoration = check.checked ? "line-through" : "none";
                 celdaTexto.appendChild(parrafo);
 
                 // Celda para la etiqueta de estado
                 const celdaEstado = document.createElement("td");
                 const label = document.createElement("span");
-                label.textContent = elemento.status ? "Pendiente2" : "Completado";
-                label.className = elemento.status ?  "badge bg-danger": "badge bg-success";
+                label.textContent = check.checked ?  "Completado" :"Pendiente";
+                label.className = check.checked ?   "badge bg-success":"badge bg-danger";
                 celdaEstado.appendChild(label);
 
                 // Celda para el botón de borrar
@@ -69,10 +69,10 @@ async function  cargarTareas () {
 
                     
                     elemento.completada = this.checked;
-                    label.textContent = this.checked ? "Completado3" : "Pendiente3";
+                    label.textContent = this.checked ? "Completado" : "Pendiente";
                     label.className = this.checked ? "badge bg-success" : "badge bg-danger";
                     parrafo.style.textDecoration = this.checked ? "line-through" : "none";
-                    fecha.textContent = this.checked ? new Date().toLocaleString() : new Date().toLocaleString();
+                 //   fecha.textContent = this.checked ? new Date().toLocaleString() : new Date().toLocaleString();
 
                     const id = boton.id;
                     try {
@@ -147,9 +147,33 @@ document.getElementById("Tareas").addEventListener('click', async function(event
     }
 });
 
+function showModal(message) {
+    const modalMessage = document.getElementById('modalMessage');
+    modalMessage.textContent = message;
+    const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+    messageModal.show();
+  }
+
+
+
 document.getElementById("Resetear").addEventListener("click", function() {
-    document.getElementById("Tareas").innerHTML = "";
-    localStorage.removeItem("tareas");
+
+    showModal("esta seguro de resetear las tareas?");
+
+    document.getElementById("si").addEventListener("click", async function() {
+        const response = await fetch('http://localhost:3000/api/resetear_tareas', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include'
+        });
+        const arr = await response.json();
+        cargarTareas();
+    });
+        
+   
+    
 });
 
 document.addEventListener('DOMContentLoaded', cargarTareas);
