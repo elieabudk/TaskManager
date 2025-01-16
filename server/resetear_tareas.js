@@ -10,5 +10,5 @@ exports.Resetear_Tareas = async (req, res) => {
     const email = decoded.email;
     const respuesta = await model_data.deleteMany({ email: email });
     res.send(respuesta);
-    console.log(respuesta);
+    
 };

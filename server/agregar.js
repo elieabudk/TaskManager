@@ -10,10 +10,10 @@ dotenv.config();
 
 exports.agregar_tarea = async (req, res) => {
 
-    const token = req.cookies.token;
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const email = decoded.email;
     try {
+        const token = req.cookies.token;
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const email = decoded.email;
         // Tomar la tarea y el email que se envían desde el cliente
         const tarea = req.body;
     
@@ -27,7 +27,7 @@ exports.agregar_tarea = async (req, res) => {
         // Responder con la nueva tarea creada
         res.json(nuevaTarea);
     } catch (error) {
-        console.error('Error al cargar tareas:', error);
+        console.error('Error al cargar tareas (sin token):');
         res.status(500).json({ message: 'Error al cargar las tareas' });
     }
 }

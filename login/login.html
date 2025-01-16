@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Gestor de Datos - Login/Registro</title>
+    <link rel="stylesheet" href="stilo_password.css">
+
+    <style>
+      body {
+        background-color: #ecf0f1;
+        color: #34495e;
+      }
+      .login-container {
+        max-width: 400px;
+        margin-top: 100px;
+      }
+      .btn-primary {
+        background-color: #45275e;
+        border-color: #321958;
+      }
+      .btn-primary:hover {
+        background-color: #2980b9;
+        border-color: #2980b9;
+      }
+      .nav-pills .nav-link.active {
+        background-color: #45275e;
+      }
+      .nav-pills .nav-link {
+        color: #34495e;
+      }
+      .nav-pills .nav-link:hover {
+        color: #3498db;
+      }
+      #forgotPassword {
+        color: #312ecc;
+      }
+      #forgotPassword:hover {
+        color: #263a38;
+      }
+      .custom-logo-size {
+        width: 150px; /* Cambia el valor según tus necesidades */
+        height: auto; /* Mantiene la proporción de la imagen */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container login-container">
+      <div class="text-center mb-4">
+        <img src="task.png" alt="Logo" class="img-fluid custom-logo-size">
+      </div>
+      <div class="card shadow">
+        <div class="card-body">
+          <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="pills-login-tab" data-bs-toggle="pill" data-bs-target="#pills-login" type="button" role="tab" aria-controls="pills-login" aria-selected="true">Login</button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="pills-register-tab" data-bs-toggle="pill" data-bs-target="#pills-register" type="button" role="tab" aria-controls="pills-register" aria-selected="false">Registrar</button>
+            </li>
+          </ul>
+          <div class="tab-content" id="pills-tabContent">
+            <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="pills-login-tab">
+              <form id="loginForm">
+                <div class="mb-3">
+                  <label for="loginEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="email" name="email" placeholder="Ingrese el correo" required>
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label">Contraseña</label>
+                  <input type="password" class="form-control" id="Password" name="password" placeholder="Ingrese la contraseña"  required>
+                </div>
+                <div class="mb-3 text-end">
+                  <div class="text-center">
+                    <a href="#" id="forgotPassword">¿Olvidaste tu contraseña?</a>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Iniciar sesión</button>
+              </form>
+            </div>
+            <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="pills-register-tab">
+              <form id="registerForm">
+                <div class="mb-3">
+                  <label for="registerName" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="registerName" name="name" placeholder="Ingrese su nombre" required>
+                </div>
+                <div class="mb-3">
+                  <label for="registerEmail" class="form-label">Email</label>
+                  <input type="email" class="form-control" id="registerEmail" name="email" placeholder="Ingrese su correo" required>
+                </div>
+                <div class="mb-3">
+                  <label for="registerPassword" class="form-label">Contraseña</label>
+                  <div class="password-container">
+                    <input type="password" class="form-control" id="registerPassword" name="password" placeholder="Ingrese su contraseña" required>
+                    <span class="status-dot"></span>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="registerConfirmPassword" class="form-label">Confirmar Contraseña</label>
+                  <div class="password-container">
+                    <input type="password" class="form-control" id="registerConfirmPassword" name="confirmPassword" placeholder="Confirme su contraseña" required>
+                    <span class="status-dot"></span>
+                  </div>
+                </div>
+                <button type="submit" class="btn btn-primary w-100" disabled>Registrarse</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Option 2: Separate Popper and Bootstrap JS -->
+    <!--
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbNtxR8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0NtxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    -->
+  
+    
+    <footer class="text-center mt-4">
+      <small>Developed by Elie Abud</small>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="messageModalLabel">Message</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="modalMessage">
+            <!-- Message will be inserted here -->
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+    <script src="inicio_registr_front.js"></script>
+  </body>
+</html>

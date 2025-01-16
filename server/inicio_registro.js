@@ -16,7 +16,16 @@ exports.Registro = async (req, res) => {
     if ( !name || !email || !password) {
         return res.status(400).json({ message: 'Todos los campos son obligatorios.' });
     }
+    if (!/^[a-zA-Z\s]*$/.test(name)) {
+        return res.status(400).json({ message: 'El nombre solo puede contener letras.' });
+    }
 
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        return res.status(400).json({ message: 'El correo electrónico no es válido.' });
+    }
+    if (!/^[a-zA-Z0-9]{8,}$/.test(password)) {
+        return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres.' });
+    }
     // Verificar si el usuario ya existe en la base de datos
     const existingUser = await mongoose.model('User').findOne({ email: email });
     if (existingUser) {
@@ -41,11 +50,17 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     // Buscar usuario en la base de datos
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        return res.status(400).json({ message: 'El correo electrónico no es válido.' });
+    }
+  //  if (!/^[a-zA-Z0-9]{8,}$/.test(password)) {
+        //return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres.' });
+  //  }
     const user = await mongoose.model('User').findOne({ email: email });
     if (!user) {
         return res.status(404).json({ message: 'Usuario no encontrado.' });
     }
-
+    
     // Verificar contraseña
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {

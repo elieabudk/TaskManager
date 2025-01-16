@@ -17,15 +17,9 @@ document.addEventListener('DOMContentLoaded', function () {
     loginForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('Password').value.trim();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('Password').value;
       
-  
-      // Simple client-side validation
-      if (!validateEmail(email) || !validatePassword(password)) {
-          showModal('Invalid input. Please check your email and password.');
-          return;
-      }
   
       try {
           const response = await fetch(`http://localhost:3000/api/login`, {
@@ -41,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function () {
           const data = await response.json();
           
           if (response.ok) {
-            window.location.href = "/task";
+            window.location.href = '/public/index2.html';
           } else {
               showModal(data.message);
           }
@@ -88,15 +82,9 @@ confirmPasswordInput.addEventListener("input", validatePasswords);
 
 document.getElementById('registerForm').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const name = document.getElementById('registerName').value.trim();
-    const email = document.getElementById('registerEmail').value.trim();
-    const password = document.getElementById('registerPassword').value.trim();
-    
-    // Simple client-side validation
-    if (!validateEmail(email) || !validatePassword(password) || !validateName(name)) {
-        showModal('Invalid input. Please check your details.');
-        return;
-    }
+    const name = document.getElementById('registerName').value;
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
 
     try {
         const response = await fetch('http://localhost:3000/api/register', {
@@ -126,7 +114,7 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
           async function modalMessage() {
             showModal(data.message);
             setTimeout(() => {
-                window.location.href = '/inicio';
+                window.location.href = '/public/login/login.html';
             }, 2000); // Espera 2 segundos antes de redirigir
           }
 
@@ -142,22 +130,6 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
         showModal('An error occurred. Please try again.');
     }
 });
-
-// Function to validate email format
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-// Function to validate password (example: at least 6 characters)
-function validatePassword(password) {
-    return password.length >= 3;
-}
-
-// Function to validate name (example: not empty)
-function validateName(name) {
-    return name.length > 0;
-}
 
 
 

@@ -102,6 +102,10 @@ async function  cargarTareas () {
 
 document.getElementById("Agregar").addEventListener("click", async function() {
     let tareaTexto = document.getElementById("taskInput").value;
+    if (tareaTexto === "") {
+        showModal("La tarea no puede estar vacia");
+        return;
+    }
     try {
         const response = await fetch('http://localhost:3000/api/agregar_tarea', {
             method: 'POST',
@@ -112,6 +116,7 @@ document.getElementById("Agregar").addEventListener("click", async function() {
         credentials: 'include'
     });
     const arr = await response.json();
+    document.getElementById("taskInput").value = "";
     
      cargarTareas();
     } catch (error) {
@@ -137,13 +142,7 @@ document.getElementById("Tareas").addEventListener('click', async function(event
         });
         const arr = await response.json(); // Cambiar a response.json()
         cargarTareas();
-        //const index = arr.findIndex(t => t.task === taskText);
-
-       // if (index !== -1) {
-            //tareas.splice(index, 1);
-            //guardarTareas(tareas);
-            //taskRow.remove();
-       // }
+     
     }
 });
 
