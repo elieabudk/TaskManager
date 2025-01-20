@@ -183,3 +183,11 @@ document.getElementById("taskInput").addEventListener("keydown", function(event)
         document.getElementById("Agregar").click(); // Simular el clic en el botón "Agregar"
     }
 });
+
+document.getElementById("cerrarSesion").addEventListener("click", async function() {
+    const response = await fetch('http://localhost:3000/api/cerrar_sesion', {
+        method: 'DELETE',
+        credentials: 'include'
+    });
+    window.location.href = '/inicio';
+});

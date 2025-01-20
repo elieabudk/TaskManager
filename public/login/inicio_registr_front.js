@@ -160,7 +160,11 @@ function validateName(name) {
 }
 
 
+// funcion para iniciar sesion con google
 
+document.getElementById('googleButton').addEventListener('click', () => {
+  window.location.href = '/auth/google';
+});
 
    
 
