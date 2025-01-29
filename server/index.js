@@ -8,13 +8,13 @@ const cookieParser = require('cookie-parser');
 const {isAuthenticated} = require('./middlewares/middelwers');
 const path = require('path');
 const morgan = require('morgan');
-const passport = require('passport');
+
 const dotenv = require('dotenv');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const passport = require('./controllers/oauth2');
 
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const User = require('./models/model_user');
+
 
 dotenv.config();
 
@@ -24,7 +24,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api', userRoutes);
 app.use(morgan('dev'));
-app.use(passport.initialize());
+//app.use(passport.initialize());
 //app.use('/api/users', userRoutes);
 
 // creamos el puerto
@@ -42,35 +42,7 @@ app.get('/task', isAuthenticated, (req, res) => {
 });
 
 /////////////////////////////////////////////
-passport.use(
-    new GoogleStrategy(
-      {
-        clientID: process.env.GOOGLE_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback',
 
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          const { email, name, password } = {
-            email: profile.emails[0].value,
-            name: profile.displayName,
-            password: profile.id,
-          };
-          const hashedPassword = await bcrypt.hash(password, 10);
-          let user = await User.findOne({ email });
-  
-          if (!user) {
-            user = await User.create({ email, name, password: hashedPassword });
-          }
-  
-          done(null, user);
-        } catch (err) {
-          done(err, null);
-        }
-      }
-    )
-  );
   
   app.get(
       '/auth/google',
