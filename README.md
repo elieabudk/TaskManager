@@ -197,7 +197,7 @@ Este proyecto está bajo la Licencia MIT - mira el archivo [LICENSE](LICENSE) pa
 
 **Elie Abud**
 - GitHub: [elieabudk](https://github.com/elieabudk)
-- Email: tu-email@ejemplo.com
+
 
 ## 🐛 Reportar Bugs
 
