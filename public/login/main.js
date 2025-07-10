@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tarea = document.getElementById('taskInput').value;
         
         try {
-            const response = await fetch('http://localhost:3000/api/NuevoDato', {
+            const response = await fetch('/api/NuevoDato', {
                 method: 'POST',
                 body: JSON.stringify({ task: tarea, status: 'false'}),
                 headers: {
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.status === 401) {
-                window.location.href = 'http://localhost:5501/public/login/login.html';
+                window.location.href = '/inicio';
                
             }
 

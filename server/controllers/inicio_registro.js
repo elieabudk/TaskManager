@@ -75,12 +75,11 @@ exports.login = async (req, res) => {
     // Configurar cookie con el token
     res.cookie('token', token, {
         httpOnly: true,
-        secure: true, // Usa true en producción con HTTPS
-        maxAge: 36000000, // 1 hora
-        sameSite: 'none',
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 36000000,
+        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
-        domain: 'localhost',
+        // Sin dominio específico
     });
-
     res.json({ message: 'Inicio de sesión exitoso.' });
 };

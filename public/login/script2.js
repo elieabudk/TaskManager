@@ -1,8 +1,9 @@
-console.log("Hola Mundo");
+import { verificacion_servidor } from './verificacion_servidor.js';
 
 async function  cargarTareas () {
+    
     try {
-        const response = await fetch('http://localhost:3000/api/cargar_tareas', {
+        const response = await fetch('/api/cargar_tareas', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -49,9 +50,13 @@ async function  cargarTareas () {
                 celdaBoton.appendChild(boton);
 
                 // fecha de creacion
+                
                 const celdaFecha = document.createElement("td");
                 const fecha = document.createElement("span");
-                fecha.textContent = elemento.createdAt;
+                let fecha_mod = elemento.createdAt.replace('T', ' ');
+                fecha.textContent = fecha_mod;
+                
+               //console.log(fecha_mod)
                 celdaFecha.appendChild(fecha);
 
                 // Agregar todas las celdas a la fila
@@ -76,7 +81,7 @@ async function  cargarTareas () {
 
                     const id = boton.id;
                     try {
-                        const response = await fetch(`http://localhost:3000/api/NuevoDato/${id}`, {
+                        const response = await fetch(`/api/NuevoDato/${id}`, {
                             method: 'PUT',
                             headers: {
                             'Content-Type': 'application/json'
@@ -101,13 +106,21 @@ async function  cargarTareas () {
 
 
 document.getElementById("Agregar").addEventListener("click", async function() {
+ 
+    const verificacion = await verificacion_servidor();
+    if (!verificacion) {
+        showModal("Servidor no disponible");
+        return;
+    }else{
+
+
     let tareaTexto = document.getElementById("taskInput").value;
     if (tareaTexto === "") {
         showModal("La tarea no puede estar vacia");
         return;
     }
     try {
-        const response = await fetch('http://localhost:3000/api/agregar_tarea', {
+        const response = await fetch('/api/agregar_tarea', {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json'
@@ -122,18 +135,24 @@ document.getElementById("Agregar").addEventListener("click", async function() {
     } catch (error) {
         console.error("Error al agregar tarea:", error);
     }
-    
+    }
 });
 
 // evento de click en la tabla para borrar una tarea
 document.getElementById("Tareas").addEventListener('click', async function(event) {
+
+    const verificacion = await verificacion_servidor();
+    if (!verificacion) {
+        showModal("Servidor no disponible");
+        return;
+    }else{
     if (event.target.classList.contains('borrar')) {
         const taskRow = event.target.closest('tr');
         const taskText = taskRow.querySelector('p').textContent.trim();
 
         const id = taskRow.querySelector('button').id;
 
-        let response = await fetch(`http://localhost:3000/api/borrar_tarea/${id}`, {
+        let response = await fetch(`/api/borrar_tarea/${id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -144,6 +163,7 @@ document.getElementById("Tareas").addEventListener('click', async function(event
         cargarTareas();
      
     }
+}
 });
 
 function showModal(message) {
@@ -155,12 +175,18 @@ function showModal(message) {
 
 
 
-document.getElementById("Resetear").addEventListener("click", function() {
+document.getElementById("Resetear").addEventListener("click", async function() {
+
+    const verificacion = await verificacion_servidor();
+    if (!verificacion) {
+        showModal("Servidor no disponible");
+        return;
+    }else{
 
     showModal("esta seguro de resetear las tareas?");
 
     document.getElementById("si").addEventListener("click", async function() {
-        const response = await fetch('http://localhost:3000/api/resetear_tareas', {
+        const response = await fetch('/api/resetear_tareas', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -172,7 +198,7 @@ document.getElementById("Resetear").addEventListener("click", function() {
     });
         
    
-    
+    }
 });
 
 document.addEventListener('DOMContentLoaded', cargarTareas);
@@ -185,7 +211,7 @@ document.getElementById("taskInput").addEventListener("keydown", function(event)
 });
 
 document.getElementById("cerrarSesion").addEventListener("click", async function() {
-    const response = await fetch('http://localhost:3000/api/cerrar_sesion', {
+    const response = await fetch('/api/cerrar_sesion', {
         method: 'DELETE',
         credentials: 'include'
     });

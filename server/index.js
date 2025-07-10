@@ -24,15 +24,20 @@ app.use(express.json());
 app.use(cookieParser());
 app.use('/api', userRoutes);
 app.use(morgan('dev'));
+
 //app.use(passport.initialize());
 //app.use('/api/users', userRoutes);
 
 // creamos el puerto
-const port = 3000;
+const port = process.env.PORT || 3000;
+
+
 
 
 app.use(express.static(path.join(__dirname, '../public/login')));
 // creamos la ruta de la api
+
+
 app.get('/inicio', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/login/login.html'));
 });
@@ -64,7 +69,14 @@ app.get('/task', isAuthenticated, (req, res) => {
         );
     
         // Configurar cookie
-        res.cookie('token', token, { httpOnly: true });
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 36000000,
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            path: '/',
+            // Sin dominio específico para que funcione en cualquier dominio
+        });
         res.redirect('/task');
       }
     );
