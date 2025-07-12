@@ -201,7 +201,14 @@ document.getElementById("Resetear").addEventListener("click", async function() {
     }
 });
 
-document.addEventListener('DOMContentLoaded', cargarTareas);
+document.addEventListener('DOMContentLoaded', async function() {
+    const token = await verificacion_token();
+    if (token) {
+        window.location.href = '/task';
+    } else {
+        cargarTareas();
+    }
+});
 
 document.getElementById("taskInput").addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
@@ -217,3 +224,14 @@ document.getElementById("cerrarSesion").addEventListener("click", async function
     });
     window.location.href = '/inicio';
 });
+
+
+// verificamos el token de la cookie en el navegador si tiene token valido en la cookie redirigimos a la pagina de task
+export const verificacion_token = async () => {
+    const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
+    if (token) {
+        window.location.href = '/task';
+    } else {
+        return null;
+    }
+}
