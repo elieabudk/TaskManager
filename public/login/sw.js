@@ -15,8 +15,8 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // No interceptar peticiones de API para evitar problemas con autenticación
-  if (event.request.url.includes('/api/')) {
+  // No interceptar peticiones de API y AUTH para evitar problemas con autenticación
+  if (event.request.url.includes('/api/') || event.request.url.includes('/auth/')) {
     return;
   }
   
