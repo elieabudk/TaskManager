@@ -67,16 +67,13 @@ exports.login = async (req, res) => {
         return res.status(401).json({ message: 'Credenciales inválidas.' });
     }
 
-    // Generar JWT
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRES, // Expira en 1 hora
-    });
+    // Generar JWT sin expiración
+    const token = jwt.sign({ email }, process.env.JWT_SECRET);
 
     // Configurar cookie con el token
     res.cookie('token', token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        maxAge: 36000000,
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
         // Sin dominio específico
