@@ -118,8 +118,6 @@ document.addEventListener('DOMContentLoaded', async function () {
   console.log("Usuario no logueado, mostrando formulario de login");
   const loginForm = document.getElementById('loginForm');
 
-
-
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -156,98 +154,93 @@ document.addEventListener('DOMContentLoaded', async function () {
       showModal('An error occurred. Please try again.');
     }
   });
-});
 
-// validar las contraseñas
+  // validar las contraseñas - movido dentro del DOMContentLoaded
+  const passwordInput = document.getElementById("registerPassword");
+  const confirmPasswordInput = document.getElementById("registerConfirmPassword");
+  const statusDots = document.querySelectorAll(".status-dot");
 
-const passwordInput = document.getElementById("registerPassword");
-const confirmPasswordInput = document.getElementById("registerConfirmPassword");
-const statusDots = document.querySelectorAll(".status-dot");
+  function validatePasswords() {
+    const password = passwordInput.value;
+    const confirmPassword = confirmPasswordInput.value;
+    const registerButton = document.querySelector('#registerForm button[type="submit"]');
 
-function validatePasswords() {
-  const password = passwordInput.value;
-  const confirmPassword = confirmPasswordInput.value;
-  const registerButton = document.querySelector('#registerForm button[type="submit"]');
-
-  if (password === confirmPassword && password !== "") {
-    statusDots.forEach(dot => {
-      dot.classList.remove("error");
-      dot.classList.add("success");
-    });
-    registerButton.disabled = false;
-  } else {
-    statusDots.forEach(dot => {
-      dot.classList.remove("success");
-      dot.classList.add("error");
-    });
-    registerButton.disabled = true;
-  }
-}
-
-passwordInput.addEventListener("input", validatePasswords);
-confirmPasswordInput.addEventListener("input", validatePasswords);
-
-
-
-
-// funcion para registrar nuevo usuario 
-
-document.getElementById('registerForm').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('registerName').value.trim();
-  const email = document.getElementById('registerEmail').value.trim();
-  const password = document.getElementById('registerPassword').value.trim();
-
-  // Simple client-side validation
-  if (!validateEmail(email) || !validatePassword(password) || !validateName(name)) {
-    showModal('Invalid input. Please check your details.');
-    return;
-  }
-
-  try {
-    const response = await fetch('/api/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ name, email, password })
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      showModal(data.message);
-
+    if (password === confirmPassword && password !== "") {
+      statusDots.forEach(dot => {
+        dot.classList.remove("error");
+        dot.classList.add("success");
+      });
+      registerButton.disabled = false;
     } else {
-      showModal(data.message);
+      statusDots.forEach(dot => {
+        dot.classList.remove("success");
+        dot.classList.add("error");
+      });
+      registerButton.disabled = true;
+    }
+  }
+
+  passwordInput.addEventListener("input", validatePasswords);
+  confirmPasswordInput.addEventListener("input", validatePasswords);
+
+  // funcion para registrar nuevo usuario 
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('registerName').value.trim();
+    const email = document.getElementById('registerEmail').value.trim();
+    const password = document.getElementById('registerPassword').value.trim();
+
+    // Simple client-side validation
+    if (!validateEmail(email) || !validatePassword(password) || !validateName(name)) {
+      showModal('Invalid input. Please check your details.');
+      return;
     }
 
-    // si la respuesta en 201
-    if (response.status === 201) {
-      document.getElementById('registerName').value = '';
-      document.getElementById('registerEmail').value = '';
-      document.getElementById('registerPassword').value = '';
-      document.getElementById('registerConfirmPassword').value = '';
+    try {
+      const response = await fetch('/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, email, password })
+      });
 
-      async function modalMessage() {
+      const data = await response.json();
+
+      if (response.ok) {
         showModal(data.message);
-        setTimeout(() => {
-          window.location.href = '/inicio';
-        }, 2000); // Espera 2 segundos antes de redirigir
+      } else {
+        showModal(data.message);
       }
 
-      modalMessage();
-      // redirigir a la pagina de login
+      // si la respuesta en 201
+      if (response.status === 201) {
+        document.getElementById('registerName').value = '';
+        document.getElementById('registerEmail').value = '';
+        document.getElementById('registerPassword').value = '';
+        document.getElementById('registerConfirmPassword').value = '';
 
+        async function modalMessage() {
+          showModal(data.message);
+          setTimeout(() => {
+            window.location.href = '/inicio';
+          }, 2000); // Espera 2 segundos antes de redirigir
+        }
 
-
-
+        modalMessage();
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      showModal('An error occurred. Please try again.');
     }
-  } catch (error) {
-    console.error('Error:', error);
-    showModal('An error occurred. Please try again.');
-  }
-});
+  });
+
+  // funcion para iniciar sesion con google
+  document.getElementById('googleButton').addEventListener('click', () => {
+    window.location.href = '/auth/google';
+  });
+
+}); // Cierre del DOMContentLoaded
 
 // Function to validate email format
 function validateEmail(email) {
@@ -264,13 +257,6 @@ function validatePassword(password) {
 function validateName(name) {
   return name.length > 0;
 }
-
-
-// funcion para iniciar sesion con google
-
-document.getElementById('googleButton').addEventListener('click', () => {
-  window.location.href = '/auth/google';
-});
 
 
 
