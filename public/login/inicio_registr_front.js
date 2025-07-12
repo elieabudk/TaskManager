@@ -1,23 +1,39 @@
 // verificamos el token de la cookie en el navegador y lo validamos con el servidor
 export const verificacion_token = async () => {
+  console.log('Iniciando verificación de token...');
+  
   try {
     const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
+    console.log('Cookie encontrada:', cookieValue);
+    
     if (cookieValue) {
       const token = cookieValue.split('=')[1];
+      console.log('Token extraído:', token ? 'SI' : 'NO');
+      
       if (token && token !== 'undefined' && token !== 'null') {
         // Verificar con el servidor si el token es válido
+        console.log('Verificando token con servidor...');
         try {
-          const response = await fetch('/task', {
+          const response = await fetch('/api/verify-token', {
             method: 'GET',
             credentials: 'include'
           });
           
+          console.log('Respuesta del servidor:', response.status);
+          
           if (response.ok) {
-            // Token válido, redirigir a task
-            window.location.href = '/task';
-            return true;
+            const data = await response.json();
+            console.log('Datos de respuesta:', data);
+            
+            if (data.valid) {
+              // Token válido, redirigir a task
+              console.log('Token válido, redirigiendo a /task');
+              window.location.href = '/task';
+              return true;
+            }
           } else {
             // Token inválido, limpiar cookie
+            console.log('Token inválido, limpiando cookie');
             document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
             return false;
           }
@@ -25,11 +41,17 @@ export const verificacion_token = async () => {
           console.log('Error validating token with server:', error);
           return false;
         }
+      } else {
+        console.log('Token vacío o inválido');
       }
+    } else {
+      console.log('No se encontró cookie de token');
     }
+    
+    console.log('No hay token válido');
     return false;
   } catch (error) {
-    console.log('No token found in cookies');
+    console.log('Error general en verificación:', error);
     return false;
   }
 }
@@ -42,13 +64,14 @@ export const verificar_token_sin_redirigir = async () => {
       const token = cookieValue.split('=')[1];
       if (token && token !== 'undefined' && token !== 'null') {
         try {
-          const response = await fetch('/task', {
+          const response = await fetch('/api/verify-token', {
             method: 'GET',
             credentials: 'include'
           });
           
           if (response.ok) {
-            return true;
+            const data = await response.json();
+            return data.valid;
           } else {
             // Token inválido, limpiar cookie
             document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
@@ -80,14 +103,19 @@ function showModal(message) {
 
 document.addEventListener('DOMContentLoaded', async function () {
 
+  console.log("DOM cargado - iniciando verificación de token");
+  
   // Verificar si el usuario ya está logueado
   const isLoggedIn = await verificacion_token();
+  console.log("Resultado de verificación:", isLoggedIn);
+  
   if (isLoggedIn) {
     // Si está logueado, la función verificacion_token ya redirige automáticamente
+    console.log("Usuario logueado, debería redirigir automáticamente");
     return;
   }
   
-  console.log("DOM cargado");
+  console.log("Usuario no logueado, mostrando formulario de login");
   const loginForm = document.getElementById('loginForm');
 
 

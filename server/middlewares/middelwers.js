@@ -8,6 +8,10 @@ exports.isAuthenticated = (req, res, next) => {
     const token = req.cookies.token;
 
     if (!token) {
+        // Si es una ruta API, devolver JSON error
+        if (req.path.startsWith('/api/')) {
+            return res.status(401).json({ valid: false, message: 'No token provided' });
+        }
         // Redirigir a la página de inicio si el token no está presente
         return res.redirect('/inicio');
     }
@@ -17,13 +21,19 @@ exports.isAuthenticated = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        // Limpiar cookie inválida y redirigir
+        // Limpiar cookie inválida
         res.clearCookie('token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             path: '/',
         });
+        
+        // Si es una ruta API, devolver JSON error
+        if (req.path.startsWith('/api/')) {
+            return res.status(401).json({ valid: false, message: 'Invalid token' });
+        }
+        // Redirigir a la página de inicio
         return res.redirect('/inicio');
     }
 }

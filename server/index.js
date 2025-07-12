@@ -51,6 +51,11 @@ app.get('/task', isAuthenticated, (req, res) => {
     res.sendFile(path.join(__dirname, '../public/login/index2.html'));
 });
 
+// Ruta específica para verificar token - solo devuelve JSON
+app.get('/api/verify-token', isAuthenticated, (req, res) => {
+    res.json({ valid: true, user: req.user });
+});
+
 /////////////////////////////////////////////
 
   
