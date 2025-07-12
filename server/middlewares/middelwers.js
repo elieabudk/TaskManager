@@ -23,7 +23,7 @@ exports.isAuthenticated = (req, res, next) => {
     } catch (err) {
         // Limpiar cookie inválida
         res.clearCookie('token', {
-            httpOnly: true,
+            httpOnly: true, // Mantener seguro
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
             path: '/',

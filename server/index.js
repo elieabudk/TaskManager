@@ -80,7 +80,7 @@ app.get('/api/verify-token', isAuthenticated, (req, res) => {
     
         // Configurar cookie
         res.cookie('token', token, {
-            httpOnly: true,
+            httpOnly: true, // Mantener seguro - no accesible desde JavaScript
             secure: process.env.NODE_ENV === 'production',
             maxAge: 36000000,
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',

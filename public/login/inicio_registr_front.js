@@ -1,95 +1,57 @@
-// verificamos el token de la cookie en el navegador y lo validamos con el servidor
+// verificamos el token enviando petición al servidor (enfoque seguro)
 export const verificacion_token = async () => {
   console.log('Iniciando verificación de token...');
   
   try {
-    console.log('Todas las cookies:', document.cookie);
-    const cookieArray = document.cookie.split('; ');
-    console.log('Cookies separadas:', cookieArray);
-    const cookieValue = cookieArray.find(row => row.startsWith('token='));
-    console.log('Cookie encontrada:', cookieValue);
+    // Hacer petición al servidor - el navegador envía automáticamente la cookie httpOnly
+    console.log('Verificando token con servidor...');
+    const response = await fetch('/api/verify-token', {
+      method: 'GET',
+      credentials: 'include' // Importante: incluir cookies
+    });
     
-    if (cookieValue) {
-      const token = cookieValue.split('=')[1];
-      console.log('Token extraído:', token ? 'SI' : 'NO');
-      console.log('Token completo:', token);
+    console.log('Respuesta del servidor:', response.status);
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Datos de respuesta:', data);
       
-      if (token && token !== 'undefined' && token !== 'null') {
-        // Verificar con el servidor si el token es válido
-        console.log('Verificando token con servidor...');
-        try {
-          const response = await fetch('/api/verify-token', {
-            method: 'GET',
-            credentials: 'include'
-          });
-          
-          console.log('Respuesta del servidor:', response.status);
-          
-          if (response.ok) {
-            const data = await response.json();
-            console.log('Datos de respuesta:', data);
-            
-            if (data.valid) {
-              // Token válido, redirigir a task
-              console.log('Token válido, redirigiendo a /task');
-              window.location.href = '/task';
-              return true;
-            }
-          } else {
-            // Token inválido, limpiar cookie
-            console.log('Token inválido, limpiando cookie');
-            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            return false;
-          }
-        } catch (error) {
-          console.log('Error validating token with server:', error);
-          return false;
-        }
-      } else {
-        console.log('Token vacío o inválido');
+      if (data.valid) {
+        // Token válido, redirigir a task
+        console.log('Token válido, redirigiendo a /task');
+        window.location.href = '/task';
+        return true;
       }
     } else {
-      console.log('No se encontró cookie de token');
+      // Token inválido o no existe
+      console.log('Token inválido o no existe');
+      return false;
     }
     
     console.log('No hay token válido');
     return false;
   } catch (error) {
-    console.log('Error general en verificación:', error);
+    console.log('Error validating token with server:', error);
     return false;
   }
 }
 
-// Función auxiliar para verificar token sin redirigir
+// Función auxiliar para verificar token sin redirigir (enfoque seguro)
 export const verificar_token_sin_redirigir = async () => {
   try {
-    const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
-    if (cookieValue) {
-      const token = cookieValue.split('=')[1];
-      if (token && token !== 'undefined' && token !== 'null') {
-        try {
-          const response = await fetch('/api/verify-token', {
-            method: 'GET',
-            credentials: 'include'
-          });
-          
-          if (response.ok) {
-            const data = await response.json();
-            return data.valid;
-          } else {
-            // Token inválido, limpiar cookie
-            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
-            return false;
-          }
-        } catch (error) {
-          console.log('Error validating token with server:', error);
-          return false;
-        }
-      }
+    const response = await fetch('/api/verify-token', {
+      method: 'GET',
+      credentials: 'include' // Importante: incluir cookies
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      return data.valid;
+    } else {
+      return false;
     }
-    return false;
   } catch (error) {
-    console.log('No token found in cookies');
+    console.log('Error validating token with server:', error);
     return false;
   }
 }

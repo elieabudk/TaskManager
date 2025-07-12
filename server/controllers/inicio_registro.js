@@ -72,7 +72,7 @@ exports.login = async (req, res) => {
 
     // Configurar cookie con el token
     res.cookie('token', token, {
-        httpOnly: true,
+        httpOnly: true, // Mantener seguro - no accesible desde JavaScript
         secure: process.env.NODE_ENV === 'production',
         sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
         path: '/',
