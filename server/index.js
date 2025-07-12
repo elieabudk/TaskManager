@@ -25,7 +25,8 @@ app.use(cookieParser());
 app.use('/api', userRoutes);
 app.use(morgan('dev'));
 
-//app.use(passport.initialize());
+// Inicializar Passport para OAuth
+app.use(passport.initialize());
 //app.use('/api/users', userRoutes);
 
 // creamos el puerto
