@@ -15,8 +15,21 @@ self.addEventListener('install', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
+  // No interceptar peticiones de API para evitar problemas con autenticación
+  if (event.request.url.includes('/api/')) {
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
-      .then((response) => response || fetch(event.request))
+      .then((response) => {
+        if (response) {
+          return response;
+        }
+        // Configurar fetch para seguir redirecciones
+        return fetch(event.request, {
+          redirect: 'follow'
+        });
+      })
   );
 });
