@@ -1,10 +1,18 @@
 // verificamos el token de la cookie en el navegador si tiene token valido en la cookie redirigimos a la pagina de task
 export const verificacion_token = async () => {
-  const token = document.cookie.split('; ').find(row => row.startsWith('token=')).split('=')[1];
-  if (token) {
-    window.location.href = '/task';
-  } else {
-    return null;
+  try {
+    const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
+    if (cookieValue) {
+      const token = cookieValue.split('=')[1];
+      if (token && token !== 'undefined' && token !== 'null') {
+        window.location.href = '/task';
+        return true;
+      }
+    }
+    return false;
+  } catch (error) {
+    console.log('No token found in cookies');
+    return false;
   }
 }
 
@@ -21,12 +29,13 @@ function showModal(message) {
 
 document.addEventListener('DOMContentLoaded', async function () {
 
-  const token = await verificacion_token();
-  if (token) {
-    window.location.href = '/task';
-  } else {
-    return null;
+  // Verificar si el usuario ya está logueado
+  const isLoggedIn = await verificacion_token();
+  if (isLoggedIn) {
+    // Si está logueado, la función verificacion_token ya redirige automáticamente
+    return;
   }
+  
   console.log("DOM cargado");
   const loginForm = document.getElementById('loginForm');
 

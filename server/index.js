@@ -38,6 +38,11 @@ app.use(express.static(path.join(__dirname, '../public/login')));
 // creamos la ruta de la api
 
 
+// Ruta raíz - redirige automáticamente a /inicio
+app.get('/', (req, res) => {
+    res.redirect('/inicio');
+});
+
 app.get('/inicio', (req, res) => {
     res.sendFile(path.join(__dirname, '../public/login/login.html'));
 });

@@ -17,8 +17,14 @@ exports.isAuthenticated = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        // Manejar errores de verificación del token
-        return res.status(401).json({ error: 'Token inválido o expirado. Por favor, inicie sesión nuevamente.' });
+        // Limpiar cookie inválida y redirigir
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+            path: '/',
+        });
+        return res.redirect('/inicio');
     }
 }
 

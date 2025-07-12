@@ -1,5 +1,11 @@
 import { verificacion_servidor } from './verificacion_servidor.js';
 
+// Cargar tareas al iniciar la página
+document.addEventListener('DOMContentLoaded', async function() {
+    console.log("DOM cargado en página de tareas");
+    await cargarTareas();
+});
+
 async function  cargarTareas () {
     
     try {
