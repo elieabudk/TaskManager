@@ -1,12 +1,63 @@
-// verificamos el token de la cookie en el navegador si tiene token valido en la cookie redirigimos a la pagina de task
+// verificamos el token de la cookie en el navegador y lo validamos con el servidor
 export const verificacion_token = async () => {
   try {
     const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
     if (cookieValue) {
       const token = cookieValue.split('=')[1];
       if (token && token !== 'undefined' && token !== 'null') {
-        window.location.href = '/task';
-        return true;
+        // Verificar con el servidor si el token es válido
+        try {
+          const response = await fetch('/task', {
+            method: 'GET',
+            credentials: 'include'
+          });
+          
+          if (response.ok) {
+            // Token válido, redirigir a task
+            window.location.href = '/task';
+            return true;
+          } else {
+            // Token inválido, limpiar cookie
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            return false;
+          }
+        } catch (error) {
+          console.log('Error validating token with server:', error);
+          return false;
+        }
+      }
+    }
+    return false;
+  } catch (error) {
+    console.log('No token found in cookies');
+    return false;
+  }
+}
+
+// Función auxiliar para verificar token sin redirigir
+export const verificar_token_sin_redirigir = async () => {
+  try {
+    const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
+    if (cookieValue) {
+      const token = cookieValue.split('=')[1];
+      if (token && token !== 'undefined' && token !== 'null') {
+        try {
+          const response = await fetch('/task', {
+            method: 'GET',
+            credentials: 'include'
+          });
+          
+          if (response.ok) {
+            return true;
+          } else {
+            // Token inválido, limpiar cookie
+            document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            return false;
+          }
+        } catch (error) {
+          console.log('Error validating token with server:', error);
+          return false;
+        }
       }
     }
     return false;
