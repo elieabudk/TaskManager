@@ -3,12 +3,16 @@ export const verificacion_token = async () => {
   console.log('Iniciando verificación de token...');
   
   try {
-    const cookieValue = document.cookie.split('; ').find(row => row.startsWith('token='));
+    console.log('Todas las cookies:', document.cookie);
+    const cookieArray = document.cookie.split('; ');
+    console.log('Cookies separadas:', cookieArray);
+    const cookieValue = cookieArray.find(row => row.startsWith('token='));
     console.log('Cookie encontrada:', cookieValue);
     
     if (cookieValue) {
       const token = cookieValue.split('=')[1];
       console.log('Token extraído:', token ? 'SI' : 'NO');
+      console.log('Token completo:', token);
       
       if (token && token !== 'undefined' && token !== 'null') {
         // Verificar con el servidor si el token es válido
